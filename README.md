@@ -1,16 +1,70 @@
+    
 # Projet_chatroom_2BA
 
-Voici notre code pour l'application chatroom avec les protocols UDP et TCP.
-Notre code permet de comuniquer via un serveur ains que vie le peer-to-peer
+Notre code permet de comuniquer via un serveur ains que vie le peer-to-peer via les protocols **UDP** et **TCP**
+Série 6a binôme 4, Nguyen Khac Huy et Soysal Deniz
 
-Pour la partie Client/Serveur:
-    - Lancez Server.py et Client.py
-    - Tapez /join_server [adresse IP du serveur] [Port du serveur] pour se connecter au serveur
-    - Tapez /send [MSG] pour envoyer le message voulu
-    - Tapez /list pour récupérer la liste des personnes connectées ainsi que leurs adresse IP
+## Partie Client/Serveur
+
+Nous avons utilisé le protocol **TCP**. 
+Pour lancez la chatroom, lancez 
+
+```
+Server.py et Client.py
+```
 
 
-Pour la partie Peer-To-Peer :
-    - Lancez Client.py
-    - Tapez /join_ip [Adresse IP de la personne] [Port Utilisé] pour se connecter à la personne
-    - Tapez /send_pv [MSG] pour envoyer le message voulu
+### Commandes
+
+Pour rejoindre le serveur :
+
+```
+/join_server [ADRESSE IP SERVEUR] [PORT]
+```
+
+Pour envoyer un message via le serveur :
+
+```
+/send [MSG]
+```
+
+Pour récuperer la liste des personnes connectées au serveur :
+
+```
+/list
+```
+
+Pour quitter le serveur : 
+
+```
+/quit
+```
+
+Pour quitter le programme :
+
+```
+/exit
+```
+
+## Partie Peer-To-Peer
+
+Nous avons utilisé le protocol **UDP**.
+Pour lancez la chatroom, lancez 
+
+```
+Client.py
+```
+
+### Commandes
+
+Pour rejoindre le client de quelqu'un :
+
+```
+/join_ip [ADRESSE IP] [PORT]
+```
+
+Pour envoyer un message directement :
+
+```
+/send_pv [MSG]
+```
