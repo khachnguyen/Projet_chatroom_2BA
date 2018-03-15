@@ -54,7 +54,14 @@ class Client():
 
 
     def _help(self):
-        print("/list permet d'afficher la liste des clients connectés si vous êtes connectés au serveur\n/send permet d'envoyer un message\n/quit ==> Quitter le serveur\n/join permet de rejoindre le serveur ou de se connecter à un une autre personne grâce à l'adresse IP")
+        print("""\n/join_server [ADRESSE IP][PORT]permet de rejoindre le serveur\n
+/join_ip [ADRESSE IP][PORT] permet de se connecter à un une autre personne\n
+/send permet d'envoyer un message via le serveur\n
+/send_pv permet d'envoyer un message en peer-to-peer si connecté a une autre personne\n
+/list permet d'afficher la liste des clients connectés si vous êtes connectés au serveur\n
+/quit permet de quitter le serveur\n
+/exit permet de quitter le programme\n
+        """)
 
     def _list(self):
         self.__socket.send("/list ".encode())
