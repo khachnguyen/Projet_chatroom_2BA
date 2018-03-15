@@ -1,5 +1,5 @@
 import pickle, socket, struct, sys, threading
-
+#/join_server DESKTOP-P9NPJL4 5000
 SERVERADDRESS = (socket.gethostname(), 5000)
 ls_users = {}
 
@@ -19,7 +19,7 @@ class Server():
             client, addr = self.__server.accept()
             th = ThreadClient(client, addr)
             th.start()
-            client.send("Accueil".encode())
+            client.send("AccueilServer".encode())
 
     def exit(self):
         self.__server.close()
@@ -28,54 +28,52 @@ class Server():
 class ThreadClient(threading.Thread):
     def __init__(self, connection, addr):
         threading.Thread.__init__(self)
-        self.connection = connection
-        self.addr = addr
-        self.commands = {
+        self.__connection = connection
+        self.__addr = addr
+        self.__commands = {
             '/list': self._list,
             '/addPseudo': self._addPseudo,
         }
 
     def run(self):
-        ls_users[self.addr] = [self.connection, "", "active"]
+        ls_users[self.__addr] = [self.__connection, "", "active"]
         while True:
-            data = self.connection.recv(1024).decode()
+            data = self.__connection.recv(1024).decode()
             if data[0] == "/":
                 line = data.rstrip() + ' '
                 commande = line[:line.index(' ')]
                 param = line[line.index(' ')+1:].rstrip()
-                params = [param, self.addr]
-                if commande in self.commands:
+                params = [param, self.__addr]
+                if commande in self.__commands:
                     try:
-                        self.commands[commande](self.connection) if param == '' else self.commands[commande](params)
+                        self.__commands[commande](self.__connection) if param == '' else self.__commands[commande](params)
                     except Exception as e:
                         print("Erreur pendant l'éxécution de la commande")
-
                 else:
                     print('Commande introuvable :', commande)
-            elif not data:
-                break
             else:
-                message = "{}> {}".format(ls_users[self.addr][1], data)
+                message = "[{}] : {}".format(ls_users[self.__addr][1], data)
                 print(message)
-                for cle in ls_users:
-        	         if cle != self.addr:
-        	            ls_users[cle][0].send(message.encode())
+                for user in ls_users:
+        	         if user != self.__addr:
+        	            ls_users[user][0].send(message.encode())
 
     def _addPseudo(self, params):
-        print("ceci est un", params)
         ls_users[params[1]][1] = params[0]
-        msg = "{} vient de se connecter".format(params[0])
-        for cle in ls_users:
-             if cle != self.addr:
-                ls_users[cle][0].send(msg.encode())
+        msg = "Connexion de {} ".format(params[0])
+        for user in ls_users:
+             if user != self.__addr:
+                ls_users[user][0].send(msg.encode())
 
     def _list(self, client):
         users = ""
         for x in ls_users:
-            print (x,"yooo", ls_users)
             users += "- {} - IP : {} - Port : {}\n".format(ls_users[x][1], x[0],x[1])
-        self.connection.send(('Il y a actuellement {} connecté'.format(len(ls_users))).encode())
-        self.connection.send(users.encode())
+        self.__connection.send(('Il y a actuellement {} connecté'.format(len(ls_users))).encode())
+        self.__connection.send(users.encode())
+        
+        
+        
 
 
 if __name__ == '__main__':
