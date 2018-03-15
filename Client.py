@@ -25,6 +25,7 @@ class Client():
         }
         self.__running = True
         self.__address = None
+        threading.Thread(target=self._receive_pv).start()
         while self.__running:
             line = sys.stdin.readline().rstrip() + ' '
             # Extract the command and the param
@@ -108,6 +109,20 @@ class Client():
         while self.__running:
             try:
                 data = self.__socket.recv(1024).decode()
+                if data == "Accueil": 
+                    print("Bienvenu dans le serveur {}".format(self.__pseudo))
+                else :
+                    print(data)
+            except socket.timeout:
+                traceback.print_exc()
+            except OSError:
+                traceback.print_exc()
+                return
+                
+    def _receive_pv(self):
+        while self.__running:
+            try:
+                data = self.__socket_UDP.recv(1024).decode()
                 if data == "Accueil": 
                     print("Bienvenu dans le serveur {}".format(self.__pseudo))
                 else :
