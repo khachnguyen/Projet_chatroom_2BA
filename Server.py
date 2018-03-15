@@ -33,10 +33,11 @@ class ThreadClient(threading.Thread):
         self.__commands = {
             '/list': self._list,
             '/addPseudo': self._addPseudo,
+            '/quit': self._quit,
         }
 
     def run(self):
-        ls_users[self.__addr] = [self.__connection, "", "active"]
+        ls_users[self.__addr] = [self.__connection, ""]
         while True:
             data = self.__connection.recv(1024).decode()
             if data[0] == "/":
@@ -72,6 +73,15 @@ class ThreadClient(threading.Thread):
         self.__connection.send(('Il y a actuellement {} connecté'.format(len(ls_users))).encode())
         self.__connection.send(users.encode())
         
+    def _quit(self, pseudo):
+        for user in ls_users:
+            if ls_users[user][1] == pseudo[0]:
+                self.__connection.send(("Deconnexion en cours...").encode())
+                del ls_users[user]
+                for us in ls_users:
+                    print("HELLOE TOI", len(ls_users))
+                    ls_users[us][0].send(("{} s'est déconnecté ".format(pseudo[0])).encode())
+
         
         
 
