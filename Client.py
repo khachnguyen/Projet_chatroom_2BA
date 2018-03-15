@@ -87,6 +87,7 @@ class Client():
                 while totalsent < len(message):
                     sent = self.__socket.send(message[totalsent:])
                     totalsent += sent
+                    print(sent,"seeeent?")
             except OSError:
                 print("Erreur lors de l'Envoi du messagehhhh ")
 
