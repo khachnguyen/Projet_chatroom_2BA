@@ -13,4 +13,4 @@ Pour la partie Client/Serveur:
 Pour la partie Peer-To-Peer :
     - Lancez Client.py
     - Tapez /join_ip [Adresse IP de la personne] [Port Utilisé] pour se connecter à la personne
-    - Tapez /send [MSG] pour envoyer le message voulu
+    - Tapez /send_pv [MSG] pour envoyer le message voulu
