@@ -1,6 +1,4 @@
 import pickle, socket, struct, sys, threading
-import traceback
-
 
 class Client():
 
@@ -19,6 +17,7 @@ class Client():
             '/join_server': self._join_server,
             '/join_ip' : self._join_IP,
             '/send': self._send,
+            '/send_pv': self._send_pv,
             '/list': self._list,
             '/help': self._help,
             '/client' : self._client,
@@ -36,7 +35,7 @@ class Client():
                 try:
                     handlers[command]() if param == '' else handlers[command](param)
                 except:
-                    print("Erreukjhkhr")
+                    print("Erreur")
             else:
                 print('Commande inconnue:', command)
                 
@@ -47,18 +46,19 @@ class Client():
         self.__running = False
         self.__address = None
         self.__socket.close()
-  
+        
     def _quit(self):
         self.__address = None
+
 
     def _help(self):
         print("/list permet d'afficher la liste des clients connectés si vous êtes connectés au serveur\n/send permet d'envoyer un message\n/quit ==> Quitter le serveur\n/join permet de rejoindre le serveur ou de se connecter à un une autre personne grâce à l'adresse IP")
 
     def _list(self):
-        self.__socket.send("/list".encode())
+        self.__socket.send("/list ".encode())
 
     def _join_server(self, param):
-        if self.__pseudo == "pseudo":
+        if self.__pseudo!= " ":
             self.__pseudo = input("Choisi ton pseudo : ")
 
         tokens = param.split(' ')
@@ -92,7 +92,7 @@ class Client():
                     sent = self.__socket.send(message[totalsent:])
                     totalsent += sent
             except OSError:
-                print("Erreur lors de l'Envoi du messagehhhh ")
+                print("Erreur lors de l'Envoi du message ")
              
     def _send_pv(self, param):
         if self.__address is not None:            
@@ -103,20 +103,20 @@ class Client():
                     sent = self.__socket_UDP.sendto(message[totalsent:], self.__address)
                     totalsent += sent
             except OSError:
-                print("Erreur lors de l'Envoi du messagehhhh ")
+                print("Erreur lors de l'Envoi du message ")
 
     def _receive(self):
         while self.__running:
             try:
                 data = self.__socket.recv(1024).decode()
-                if data == "Accueil": 
+                if data == "AccueilServer": 
                     print("Bienvenu dans le serveur {}".format(self.__pseudo))
                 else :
                     print(data)
             except socket.timeout:
-                traceback.print_exc()
+                print("Vous avez été déconnecté")
+                pass
             except OSError:
-                traceback.print_exc()
                 return
                 
     def _receive_pv(self):
@@ -128,9 +128,9 @@ class Client():
                 else :
                     print(data)
             except socket.timeout:
-                traceback.print_exc()
+                print("Vous avez été déconnecté")
+                pass
             except OSError:
-                traceback.print_exc()
                 return
 
 
