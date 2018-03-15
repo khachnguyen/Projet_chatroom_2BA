@@ -49,6 +49,7 @@ class Client():
         self.__socket_UDP.close()
         
     def _quit(self):
+        self.__socket.send(('/quit {}'.format(self.__pseudo)).encode())
         self.__address = None
 
 
