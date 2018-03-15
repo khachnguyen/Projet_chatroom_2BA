@@ -1,9 +1,10 @@
 import pickle, socket, struct, sys, threading
 import traceback
 
+
 class Client():
 
-    def __init__(self, host=socket.gethostname(), port=6000, pseudo="pseudo"):
+    def __init__(self, host="0.0.0.0", port=6000, pseudo="pseudo"):
         self.__socket = socket.socket()
         self.__socket.bind((host, port))
         self.__pseudo = pseudo
@@ -73,7 +74,7 @@ class Client():
         tokens = param.split(' ')
         if len(tokens) == 2:
             try:
-                self.__address = (socket.gethostbyaddr(tokens[0])[0], int(tokens[1]))
+                self.__address = (tokens[0], int(tokens[1]))
                 print('Connecté à {}:{}'.format(*self.__address))
             except OSError:
                 print("Erreur lors de l'envoi du message.")
@@ -87,7 +88,6 @@ class Client():
                 while totalsent < len(message):
                     sent = self.__socket.send(message[totalsent:])
                     totalsent += sent
-                    print(sent,"seeeent?")
             except OSError:
                 print("Erreur lors de l'Envoi du messagehhhh ")
 
