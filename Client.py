@@ -46,6 +46,7 @@ class Client():
         self.__running = False
         self.__address = None
         self.__socket.close()
+        self.__socket_UDP.close()
         
     def _quit(self):
         self.__address = None
