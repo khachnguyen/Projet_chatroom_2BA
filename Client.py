@@ -7,6 +7,8 @@ class Client():
     def __init__(self, host="0.0.0.0", port=6000, pseudo="pseudo"):
         self.__socket = socket.socket()
         self.__socket.bind((host, port))
+        self.__socket_UDP = socket.socket(type = socket.SOCK_DGRAM)
+        self.__socket_UDP.bind((host, port))
         self.__pseudo = pseudo
         print('Écoute sur {}:{}'.format(host, port))
 
@@ -90,6 +92,17 @@ class Client():
                     totalsent += sent
             except OSError:
                 print("Erreur lors de l'Envoi du messagehhhh ")
+             
+    def _send_pv(self, param):
+        if self.__address is not None:            
+            try:
+                message = param.encode()
+                totalsent = 0
+                while totalsent < len(message):
+                    sent = self.__socket_UDP.sendto(message[totalsent:], self.__address)
+                    totalsent += sent
+            except OSError:
+                print("Erreur lors de l'Envoi du messagehhhh ")
 
     def _receive(self):
         while self.__running:
@@ -104,8 +117,6 @@ class Client():
             except OSError:
                 traceback.print_exc()
                 return
-
-
 
 
 
