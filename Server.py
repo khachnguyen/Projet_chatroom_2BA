@@ -79,7 +79,6 @@ class ThreadClient(threading.Thread):
                 self.__connection.send(("Deconnexion en cours...").encode())
                 del ls_users[user]
                 for us in ls_users:
-                    print("HELLOE TOI", len(ls_users))
                     ls_users[us][0].send(("{} s'est déconnecté ".format(pseudo[0])).encode())
 
         
