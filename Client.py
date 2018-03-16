@@ -54,6 +54,7 @@ class Client():
         else :
             self.__address = None
             self.__socket.send(('/quit {}'.format(self.__pseudo)).encode())
+            self.__pseudo ='pseudoAzErTy'
 
 
     def _help(self):
@@ -95,6 +96,8 @@ class Client():
         
        
     def _send(self, param):
+        """check what protocol to use to send a message, UDP or TCP
+        self.__pseudo is by default 'pseudoAzErTy' so if no connected to a server, it stays"""
         if self.__address is not None:           
             if self.__pseudo == 'pseudoAzErTy':
                 try:
@@ -117,6 +120,7 @@ class Client():
              
 
     def _receive(self):
+        """Function for receiving via a TCP""" 
         while self.__running:
             try:
                 data = self.__socket.recv(1024).decode()
@@ -131,6 +135,7 @@ class Client():
                 return
                 
     def _receive_pv(self):
+        """Function for receiving via UDP"""
         while self.__running:
             try:
                 data = self.__socket_UDP.recv(1024).decode()
