@@ -2,7 +2,7 @@ import pickle, socket, struct, sys, threading
 
 class Client():
 
-    def __init__(self, host="0.0.0.0", port=6000, pseudo="pseudo"):
+    def __init__(self, host="0.0.0.0", port=6000, pseudo="pseudoAzErTy"):
         self.__socket = socket.socket()
         self.__socket.bind((host, port))
         self.__socket_UDP = socket.socket(type = socket.SOCK_DGRAM)
@@ -49,8 +49,12 @@ class Client():
         self.__socket_UDP.close()
         
     def _quit(self):
-        self.__socket.send(('/quit {}'.format(self.__pseudo)).encode())
-        self.__address = None
+        if self.__pseudo =='pseudoAzErTy' :
+            self.__address = None
+            print('Vous vous êtes deconnecté')
+        else :
+            self.__address = None
+            self.__socket.send(('/quit {}'.format(self.__pseudo)).encode())
 
 
     def _help(self):
@@ -78,7 +82,7 @@ class Client():
                 threading.Thread(target=self._receive).start()
                 print('Connecté à {}:{}'.format(*self.__address))
             except OSError:
-                print("Erreur de connection")
+                print("Erreur de connexion")
 
         self.__socket.send(('/addPseudo {}'.format(self.__pseudo)).encode())
 
@@ -89,7 +93,7 @@ class Client():
                 self.__address = (tokens[0], int(tokens[1]))
                 print('Connecté à {}:{}'.format(*self.__address))
             except OSError:
-                print("Erreur lors de l'envoi du message.")
+                print("Erreur lors de la connexion.")
         
        
     def _send(self, param):
