@@ -17,7 +17,6 @@ class Client():
             '/join_server': self._join_server,
             '/join_ip' : self._join_IP,
             '/send': self._send,
-            '/send_pv': self._send_pv,
             '/list': self._list,
             '/help': self._help,
             '/client' : self._client,
@@ -60,10 +59,9 @@ class Client():
     def _help(self):
         print("""\n/join_server [ADRESSE IP][PORT]permet de rejoindre le serveur\n
 /join_ip [ADRESSE IP][PORT] permet de se connecter à un une autre personne\n
-/send permet d'envoyer un message via le serveur\n
-/send_pv permet d'envoyer un message en peer-to-peer si connecté a une autre personne\n
+/send permet d'envoyer un message\n
 /list permet d'afficher la liste des clients connectés si vous êtes connectés au serveur\n
-/quit permet de quitter le serveur\n
+/quit permet de quitter le serveur, la personne à qui vous vous etes connecté\n
 /exit permet de quitter le programme\n
         """)
 
@@ -82,7 +80,7 @@ class Client():
                 threading.Thread(target=self._receive).start()
                 print('Connecté à {}:{}'.format(*self.__address))
             except OSError:
-                print("Erreur de connexion")
+                print("Erreur de connexion au serveur")
 
         self.__socket.send(('/addPseudo {}'.format(self.__pseudo)).encode())
 
@@ -93,30 +91,30 @@ class Client():
                 self.__address = (tokens[0], int(tokens[1]))
                 print('Connecté à {}:{}'.format(*self.__address))
             except OSError:
-                print("Erreur lors de la connexion.")
+                print("Erreur lors de la connexion")
         
        
     def _send(self, param):
-        if self.__address is not None:            
-            try:
-                message = param.encode()
-                totalsent = 0
-                while totalsent < len(message):
-                    sent = self.__socket.send(message[totalsent:])
-                    totalsent += sent
-            except OSError:
-                print("Erreur lors de l'Envoi du message ")
+        if self.__address is not None:           
+            if self.__pseudo == 'pseudoAzErTy':
+                try:
+                    message = param.encode()
+                    totalsent = 0
+                    while totalsent < len(message):
+                        sent = self.__socket_UDP.sendto(message[totalsent:], self.__address)
+                        totalsent += sent
+                except OSError:
+                    print("Erreur lors de l'envoi du message ")
+            else:
+                try:
+                    message = param.encode()
+                    totalsent = 0
+                    while totalsent < len(message):
+                        sent = self.__socket.send(message[totalsent:])
+                        totalsent += sent
+                except OSError:
+                    print("Erreur lors de l'envoi du message au serveur ")
              
-    def _send_pv(self, param):
-        if self.__address is not None:            
-            try:
-                message = param.encode()
-                totalsent = 0
-                while totalsent < len(message):
-                    sent = self.__socket_UDP.sendto(message[totalsent:], self.__address)
-                    totalsent += sent
-            except OSError:
-                print("Erreur lors de l'Envoi du message ")
 
     def _receive(self):
         while self.__running:
