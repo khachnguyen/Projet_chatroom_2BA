@@ -40,6 +40,7 @@ class ThreadClient(threading.Thread):
         ls_users[self.__addr] = [self.__connection, ""]
         while True:
             data = self.__connection.recv(1024).decode()
+            #Check if a command is send through the client
             if data[0] == "/":
                 line = data.rstrip() + ' '
                 commande = line[:line.index(' ')]
@@ -52,6 +53,7 @@ class ThreadClient(threading.Thread):
                         print("Erreur pendant l'éxécution de la commande")
                 else:
                     print('Commande introuvable :', commande)
+            #Display the message to all the users        
             else:
                 message = "[{}] : {}".format(ls_users[self.__addr][1], data)
                 print(message)
@@ -60,6 +62,7 @@ class ThreadClient(threading.Thread):
         	            ls_users[user][0].send(message.encode())
 
     def _addPseudo(self, params):
+        """Link an adress to the pseudo given"""
         ls_users[params[1]][1] = params[0]
         msg = "Connexion de {} ".format(params[0])
         for user in ls_users:
@@ -67,6 +70,7 @@ class ThreadClient(threading.Thread):
                 ls_users[user][0].send(msg.encode())
 
     def _list(self, client):
+        """Return a list of all connected users"""
         users = ""
         for x in ls_users:
             users += "- {} - IP : {} - Port : {}\n".format(ls_users[x][1], x[0],x[1])
@@ -74,6 +78,7 @@ class ThreadClient(threading.Thread):
         self.__connection.send(users.encode())
         
     def _quit(self, pseudo):
+        """Handle a quit from a users"""
         for user in ls_users:
             if ls_users[user][1] == pseudo[0]:
                 self.__connection.send(("Deconnexion en cours...").encode())
@@ -82,8 +87,6 @@ class ThreadClient(threading.Thread):
                     ls_users[us][0].send(("{} s'est déconnecté ".format(pseudo[0])).encode())
 
         
-        
-
-
+       
 if __name__ == '__main__':
     Server().run()
