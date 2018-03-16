@@ -66,5 +66,5 @@ Pour rejoindre le client de quelqu'un :
 Pour envoyer un message directement :
 
 ```
-/send_pv [MSG]
+/send [MSG]
 ```
